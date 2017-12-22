@@ -41,7 +41,7 @@ $ docker run -dt \
     -p 80:80 \
     -p 443:443 \
     -v /tmp/test:/data \
-    robostlund/haproxy1.8-letsencrypt:latest
+    robostlund/haproxy-letsencrypt:latest
 ```
 With letsencrypt
 ```sh
@@ -54,7 +54,7 @@ $ docker run -dt \
     -e LETSENCRYPT_ENABLED='yes' \
     -e LETSENCRYPT_DOMAINS='domain1.se,domain2.se' \
     -e LETSENCRYPT_EMAIL='me@domain1.se' \
-    robostlund/haproxy1.8-letsencrypt:latest
+    robostlund/haproxy-letsencrypt:latest
 ```
 
 ----------
@@ -65,7 +65,7 @@ Without letsencrypt
       docker_container:
         name: 'haproxy'
         hostname: haproxy
-        image: robostlund/ robostlund/haproxy1.8-letsencrypt:latest
+        image: robostlund/ robostlund/haproxy-letsencrypt:latest
         recreate: yes
         pull: true
         ports:
@@ -81,7 +81,7 @@ With letsencrypt
       docker_container:
         name: 'haproxy'
         hostname: haproxy
-        image: robostlund/ robostlund/haproxy1.8-letsencrypt:latest
+        image: robostlund/ robostlund/haproxy-letsencrypt:latest
         recreate: yes
         pull: true
         ports:
@@ -95,4 +95,3 @@ With letsencrypt
           LETSENCRYPT_EMAIL='me@domain1.se' \
 
 ```
-
