@@ -28,7 +28,7 @@ RUN add-apt-repository -y ppa:vbernat/haproxy-1.8 && \
 
 # install haproxy and letsencrypt
 RUN apt-get update && \
-    apt-get install -y haproxy && \
+    apt-get install -y haproxy hatop && \
     rm -f /etc/rsyslog.d/49-haproxy.conf && \
     echo "\$AddUnixListenSocket /var/lib/haproxy/dev/log" > /etc/rsyslog.d/49-haproxy.conf && \
     echo "local0.=info    /data/var/log/haproxy/haproxy_info.log" >> /etc/rsyslog.d/49-haproxy.conf && \
@@ -36,10 +36,15 @@ RUN apt-get update && \
     echo "& ~" >> /etc/rsyslog.d/49-haproxy.conf && \
     sed -i 's/\/var\/log\/haproxy.log/\/data\/var\/log\/haproxy\/haproxy_\*.log/g' /etc/logrotate.d/haproxy && \
     rm -f /etc/haproxy/haproxy.cfg && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+
+# configure hatop
+    echo "#!/bin/bash" > /usr/local/bin/hatop && \
+    echo "/usr/bin/hatop -s /run/haproxy/admin.sock" >> /usr/local/bin/hatop && \
+    chmod 755 /usr/local/bin/hatop && \
 
 # install letsencrypt
-RUN wget -O /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt && \
+    wget -O /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt && \
     wget -O /etc/ssl/certs/letsencryptauthorityx3.pem https://letsencrypt.org/certs/letsencryptauthorityx3.pem.txt && \
     mkdir -p $LETSENCRYPT_HOME && \
     cd $LETSENCRYPT_HOME && \
@@ -48,7 +53,6 @@ RUN wget -O /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem https://letsencrypt.
       then cd letsencrypt && git checkout tags/v${LETSENCRYPT_VERSION} ; \
     fi && \
     /opt/letsencrypt/letsencrypt/letsencrypt-auto --no-self-upgrade --help
-
 
 ##################################################################
 # copy files
