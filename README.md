@@ -95,3 +95,11 @@ With letsencrypt
           LETSENCRYPT_EMAIL='me@domain1.se' \
 
 ```
+
+
+
+###### Tools
+You can run hatop like this:
+```sh
+docker exec -it <container_id_or_name> /usr/local/bin/hatop
+```
