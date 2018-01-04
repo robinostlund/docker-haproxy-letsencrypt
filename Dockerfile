@@ -39,6 +39,7 @@ RUN apt-get update && \
     rm -f /etc/rsyslog.d/49-haproxy.conf && \
     echo "\$AddUnixListenSocket /var/lib/haproxy/dev/log" > /etc/rsyslog.d/49-haproxy.conf && \
     echo "local0.=info    /data/var/log/haproxy/haproxy_info.log" >> /etc/rsyslog.d/49-haproxy.conf && \
+    echo "& stop" >> /etc/rsyslog.d/49-haproxy.conf && \
     echo "local0.notice    /data/var/log/haproxy/haproxy_notice.log" >> /etc/rsyslog.d/49-haproxy.conf && \
     echo "& stop" >> /etc/rsyslog.d/49-haproxy.conf && \
 
