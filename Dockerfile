@@ -29,22 +29,32 @@ RUN add-apt-repository -y ppa:vbernat/haproxy-1.8 && \
 # install haproxy and letsencrypt and configure rsyslog
 RUN apt-get update && \
     apt-get install -y haproxy hatop && \
+
+    # fix container bug for syslog, by disabling: emerg and imklog
     sed -i 's/\$KLogPermitNonKernelFacility/#$KLogPermitNonKernelFacility/g' /etc/rsyslog.conf && \
+    sed -i "s|\*.emerg|\#\*.emerg|" /etc/rsyslog.conf && \
+    sed -i 's/$ModLoad imklog/#$ModLoad imklog/' /etc/rsyslog.conf && \
+
+    # enable rsyslog logging for haproxy
     rm -f /etc/rsyslog.d/49-haproxy.conf && \
     echo "\$AddUnixListenSocket /var/lib/haproxy/dev/log" > /etc/rsyslog.d/49-haproxy.conf && \
     echo "local0.=info    /data/var/log/haproxy/haproxy_info.log" >> /etc/rsyslog.d/49-haproxy.conf && \
     echo "local0.notice    /data/var/log/haproxy/haproxy_notice.log" >> /etc/rsyslog.d/49-haproxy.conf && \
     echo "& ~" >> /etc/rsyslog.d/49-haproxy.conf && \
+
+    # change path for haproxy logrotate
     sed -i 's/\/var\/log\/haproxy.log/\/data\/var\/log\/haproxy\/haproxy_\*.log/g' /etc/logrotate.d/haproxy && \
+    # cleanup
     rm -f /etc/haproxy/haproxy.cfg && \
     rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/* && \
 
-# configure hatop
+    # configure hatop
     echo "#!/bin/bash" > /usr/local/bin/hatop && \
     echo "/usr/bin/hatop -s /run/haproxy/admin.sock" >> /usr/local/bin/hatop && \
     chmod 755 /usr/local/bin/hatop && \
 
-# install letsencrypt
+    # install letsencrypt
     wget -O /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt && \
     wget -O /etc/ssl/certs/letsencryptauthorityx3.pem https://letsencrypt.org/certs/letsencryptauthorityx3.pem.txt && \
     mkdir -p $LETSENCRYPT_HOME && \
