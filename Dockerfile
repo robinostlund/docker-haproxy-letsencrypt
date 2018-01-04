@@ -26,9 +26,10 @@ RUN apt-get -y install apt-utils supervisor software-properties-common wget open
 RUN add-apt-repository -y ppa:vbernat/haproxy-1.8 && \
     add-apt-repository -y ppa:certbot/certbot
 
-# install haproxy and letsencrypt
+# install haproxy and letsencrypt and configure rsyslog
 RUN apt-get update && \
     apt-get install -y haproxy hatop && \
+    sed -i 's/\$KLogPermitNonKernelFacility/#$KLogPermitNonKernelFacility/g' /etc/rsyslog.conf && \
     rm -f /etc/rsyslog.d/49-haproxy.conf && \
     echo "\$AddUnixListenSocket /var/lib/haproxy/dev/log" > /etc/rsyslog.d/49-haproxy.conf && \
     echo "local0.=info    /data/var/log/haproxy/haproxy_info.log" >> /etc/rsyslog.d/49-haproxy.conf && \
