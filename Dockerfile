@@ -34,7 +34,6 @@ RUN apt-get update && \
     sed -i 's/\$KLogPermitNonKernelFacility/#$KLogPermitNonKernelFacility/g' /etc/rsyslog.conf && \
     sed -i "s|\*.emerg|\#\*.emerg|" /etc/rsyslog.conf && \
     sed -i 's/$ModLoad imklog/#$ModLoad imklog/' /etc/rsyslog.conf && \
-    sed -i 's/$ModLoad imklog/#$ModLoad imklog/' /etc/rsyslog.conf && \
 
     # enable rsyslog logging for haproxy
     rm -f /etc/rsyslog.d/49-haproxy.conf && \
