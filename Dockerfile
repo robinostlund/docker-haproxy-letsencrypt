@@ -40,7 +40,7 @@ RUN apt-get update && \
     echo "\$AddUnixListenSocket /var/lib/haproxy/dev/log" > /etc/rsyslog.d/49-haproxy.conf && \
     echo "local0.=info    /data/var/log/haproxy/haproxy_info.log" >> /etc/rsyslog.d/49-haproxy.conf && \
     echo "local0.notice    /data/var/log/haproxy/haproxy_notice.log" >> /etc/rsyslog.d/49-haproxy.conf && \
-    echo "& ~" >> /etc/rsyslog.d/49-haproxy.conf && \
+    echo "& stop" >> /etc/rsyslog.d/49-haproxy.conf && \
 
     # change path for haproxy logrotate
     sed -i 's/\/var\/log\/haproxy.log/\/data\/var\/log\/haproxy\/haproxy_\*.log/g' /etc/logrotate.d/haproxy && \
